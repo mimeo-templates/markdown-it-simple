@@ -78,6 +78,22 @@ doesn't need it, but it stops GitHub Pages from running Jekyll if
 - If `public/` has no root `index.md`, the build generates
   an index page that lists every page.
 
+## Images and other files
+
+There is no designated image directory. Any file in `public/` that isn't
+Markdown is copied to the same path in `_site/`, so put files wherever
+suits the site:
+
+- **Used by one page**: next to that page, e.g. `public/hughie/hat.jpg`,
+  linked as `![hat](hat.jpg)`. The page and its files move together.
+- **Shared across pages**: in `public/assets/`, next to the stylesheet,
+  e.g. `![logo](../assets/logo.png)` from a page one level down.
+
+Use relative paths. A project Pages site is served from a subpath
+(`https://<owner>.github.io/<repo>/`), so a root-relative path like
+`/assets/logo.png` points outside the site. The build only rewrites links
+to `.md` files; image and other paths are left as written.
+
 ## Front matter
 
 Front matter is optional YAML at the top of a page:
