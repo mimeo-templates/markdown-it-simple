@@ -5,6 +5,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import MarkdownIt from "markdown-it";
 import anchor from "markdown-it-anchor";
+import deflist from "markdown-it-deflist";
 import matter from "gray-matter";
 
 const SRC_DIR = path.resolve(process.env.SRC_DIR ?? "public");
@@ -44,6 +45,7 @@ const fill = (content, fm, rel) =>
 const htmlName = (file) => file.replace(MD_EXT, ".html");
 
 const md = new MarkdownIt({ html: true, linkify: true });
+md.use(deflist);
 md.use(anchor, {
   slugify,
   // Collect headings per render for the table of contents.

@@ -42,6 +42,18 @@ and still leave one behind to get into trouble. Stories use this a lot:
 The order of the names never changes, even when the order of the ducks
 does.
 
+## Telling them apart
+
+Hughie
+: Red. The leader, or at least the one who says so.
+
+Dewey
+: Blue. The middle nephew, and the one most likely to be forgotten in a
+  headcount.
+
+Louie
+: Green. The schemer.
+
 ## See also
 
 - [Hughie](../hughie/), in red

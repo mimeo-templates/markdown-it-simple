@@ -1,12 +1,13 @@
 # markdown-it-simple
 
 A mimeo template that turns a folder of Markdown files into a static site.
-One build script, three dependencies ([markdown-it], [markdown-it-anchor],
-[gray-matter]), no static site generator. Pushing to `main` builds the
+One build script, four dependencies ([markdown-it], [markdown-it-anchor],
+[markdown-it-deflist], [gray-matter]), no static site generator. Pushing to `main` builds the
 site and deploys it to GitHub Pages.
 
 [markdown-it]: https://github.com/markdown-it/markdown-it
 [markdown-it-anchor]: https://github.com/valeriangalliat/markdown-it-anchor
+[markdown-it-deflist]: https://github.com/markdown-it/markdown-it-deflist
 [gray-matter]: https://github.com/jonschlinkert/gray-matter
 
 ## Quick start
@@ -66,6 +67,14 @@ doesn't need it, but it stops GitHub Pages from running Jekyll if
 - A page with two or more `##` or `###` headings gets a table of contents
   at the top.
 - Raw HTML in Markdown is passed through, and bare URLs are turned into links.
+- Definition lists (`<dl>`) use the Pandoc/PHP Markdown Extra syntax: a
+  term on its own line, then one or more lines starting with `: `.
+  Indent continuation lines by two spaces.
+
+  ```markdown
+  Hughie
+  : Red. The leader, or at least the one who says so.
+  ```
 - If `public/` has no root `index.md`, the build generates
   an index page that lists every page.
 

@@ -8,6 +8,7 @@
   "dependencies": {
     "gray-matter": "^4.0.3",
     "markdown-it": "^15.0.3",
-    "markdown-it-anchor": "^10.0.0"
+    "markdown-it-anchor": "^10.0.0",
+    "markdown-it-deflist": "^4.0.0"
   }
 }
