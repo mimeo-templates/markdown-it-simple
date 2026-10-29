@@ -207,6 +207,11 @@ The workflow in `.github/workflows/pages.yml` runs on pushes to `main`
 that change `public/`, `scripts/`, `package.json`, `package-lock.json`, or
 the workflow itself. It can also be started by hand from the Actions tab.
 
+To push a change to those paths without deploying, put `[skip ci]` in the
+commit message. GitHub's
+[Skipping workflow runs](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-workflow-runs/skipping-workflow-runs)
+lists the other accepted strings.
+
 To enable it on a new repository made from this template, go to
 **Settings > Pages** and set **Source** to **GitHub Actions**.
 
