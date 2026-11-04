@@ -150,13 +150,6 @@ header#title-block-header {
   margin-bottom: 1.5rem;
 }
 
-header .subtitle,
-header .author,
-header .date {
-  color: var(--muted);
-  margin: 0.25rem 0;
-}
-
 #TOC li.toc-h3 {
   margin-left: 1.1rem;
 }
