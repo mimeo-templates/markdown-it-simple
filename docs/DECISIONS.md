@@ -121,7 +121,7 @@ template must set Pages source to GitHub Actions.
 
 **Status**: Active
 
-**Context**: The tepiton pandoc templates already have HTML conventions for
+**Context**: The mimeo-templates pandoc templates already have HTML conventions for
 the title block and TOC.
 
 **Decision**: Use pandoc's ids and classes: `header#title-block-header`,
@@ -204,6 +204,31 @@ deploy); file mtime (meaningless after a fresh checkout).
 **Consequences**: Uncommitted edits don't move the date. Commits outside
 `SRC_DIR` don't count. A shallow clone would give every page the same date,
 hence the workflow change.
+
+---
+
+### DEC-011: npm and Node setup follows the eleventy templates, minus `audit=false` (2026-11-03)
+
+**Status**: Active
+
+**Context**: The eleventy templates got npm install cleanup on 2026-10-03
+(DEC-004 in `~/projects/WEBSITES/mimeo-templates/docs/`). markdown-it-simple had no
+`.npmrc`, no `engines`, and built on `lts/*` in CI.
+
+**Decision**: Commit `.npmrc` with `fund=false` only; `engines.node`
+`>=22`; `.nvmrc` `24`; the workflow reads `node-version-file: .nvmrc`
+(and `.nvmrc` is in its `paths` trigger). `package.json` `name` becomes
+`markdown-it-simple`.
+
+**Alternatives considered**: `audit=false` as in the eleventy repos.
+Rejected: it hides a chokidar finding that only eleventy 3 has, and
+`npm audit` here reports 0 vulnerabilities. Hard-coding `node-version: 24`
+in the workflow, as the eleventy repos do, was also rejected: reading
+`.nvmrc` keeps the Node version in one file.
+
+**Consequences**: `.nvmrc` sets the Node version for both local work and
+CI. Nothing in `build.mjs` needs Node newer than 22; `>=22` is the oldest
+Node release line that is still supported.
 
 ---
 

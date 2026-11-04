@@ -15,10 +15,9 @@ need triage.
 
 ## Active Tasks
 
-- [ ] Triage candidate tasks in IMPLEMENTATION.md (Phase 1)
-- [ ] Remove unused `header .subtitle/.author/.date` CSS (here and in blueberryhill.fyi)
-- [ ] `package.json` name `markdown-pages-site` vs repo `markdown-it-simple`
-- [ ] npm hygiene (`.npmrc`, `engines.node`, `.nvmrc`) like the eleventy templates
+- [x] Package rename, npm/Node setup (DEC-011), unused header CSS removed
+- [x] GitHub repo description set to the org README one-liner
+- [ ] Remove the same unused header CSS in blueberryhill.fyi
 
 ## Blockers
 
@@ -32,6 +31,7 @@ None.
 - `{{key}}` substitution runs before rendering, also inside code (DEC-003)
 - blueberryhill.fyi is the first site from this template and the source of ported features
 - No tests: `npm run build` on the sample content is the check
+- Node version lives in `.nvmrc` only; CI reads it via `node-version-file` (DEC-011)
 
 ## Next Session
 

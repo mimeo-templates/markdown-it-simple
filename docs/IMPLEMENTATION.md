@@ -31,7 +31,7 @@ Details: [chronicles/phase-0-foundation.md](chronicles/phase-0-foundation.md)
 
 ## Phase 1: Template Hygiene (Current)
 
-**Goal**: bring the template in line with the conventions the other tepiton
+**Goal**: bring the template in line with the conventions the other mimeo-templates
 templates follow, and settle loose ends left from Phase 0.
 
 ### Completed
@@ -43,23 +43,19 @@ templates follow, and settle loose ends left from Phase 0.
       (DEC-009), ported from blueberryhill.fyi
 - [x] `date: auto` from git commit dates; workflow `fetch-depth: 0` (DEC-010)
 - [x] TOC box border removed; samples and README updated
+- [x] `package.json` `name` renamed to `markdown-it-simple`
+- [x] npm/Node setup: `.npmrc` (`fund=false`), `engines.node >=22`,
+      `.nvmrc` 24, workflow `node-version-file: .nvmrc` (DEC-011)
+- [x] Removed unused `header .subtitle/.author/.date` CSS (built `_site/`
+      diffed: only change is in `style.css`)
+- [x] Content-fixture matrix: no. It reads `public/`, not `content/`
+- [x] GitHub repo description set to the org README one-liner (was
+      "a markdown-it markdown template"); remote moved to the renamed
+      `mimeo-templates` org
 
 ### Candidate tasks
 
-None of these are committed to yet; each needs a yes/no.
-
-- [ ] `package.json` `name` is `markdown-pages-site`; rename to
-      `markdown-it-simple` to match the repo
-- [ ] GitHub repo description ("a markdown-it markdown template") differs
-      from the org README one-liner; pick one wording
-- [ ] npm install hygiene as in the eleventy templates (DEC-004 in
-      `~/projects/tepiton/docs/`): `.npmrc` (`fund=false`, `audit=false`),
-      truthful `engines.node`, `.nvmrc`
-- [ ] Workflow uses `node-version: lts/*`; consider pinning to match `.nvmrc`
-- [ ] Remove the now-unused `header .subtitle/.author/.date` rules from
-      `style.css` (and in blueberryhill.fyi)
-- [ ] Decide whether markdown-it-simple joins the content-fixture matrix
-      (it reads `public/`, not `content/`, so likely not)
+- [ ] Remove the same unused header CSS in blueberryhill.fyi
 
 ### Notes
 
