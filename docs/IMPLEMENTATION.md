@@ -39,6 +39,10 @@ templates follow, and settle loose ends left from Phase 0.
 - [x] Project tracking set up (`docs/`)
 - [x] Definition lists via markdown-it-deflist, ported from blueberryhill.fyi
       (DEC-008)
+- [x] Front matter shown only via `{{key}}`; TOC only via `{{toc}}`
+      (DEC-009), ported from blueberryhill.fyi
+- [x] `date: auto` from git commit dates; workflow `fetch-depth: 0` (DEC-010)
+- [x] TOC box border removed; samples and README updated
 
 ### Candidate tasks
 
@@ -52,6 +56,8 @@ None of these are committed to yet; each needs a yes/no.
       `~/projects/tepiton/docs/`): `.npmrc` (`fund=false`, `audit=false`),
       truthful `engines.node`, `.nvmrc`
 - [ ] Workflow uses `node-version: lts/*`; consider pinning to match `.nvmrc`
+- [ ] Remove the now-unused `header .subtitle/.author/.date` rules from
+      `style.css` (and in blueberryhill.fyi)
 - [ ] Decide whether markdown-it-simple joins the content-fixture matrix
       (it reads `public/`, not `content/`, so likely not)
 

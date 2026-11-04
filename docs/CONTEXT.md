@@ -1,21 +1,23 @@
 ---
 phase: 1
 phase_name: Template Hygiene
-updated: 2026-10-29
-last_commit: 1600ca4
-last_entry: 4
+updated: 2026-11-03
+last_commit: 3a5a61e
+last_entry: 5
 ---
 
 ## Current Focus
 
-Template works and deploys; definition lists landed this session. Phase 1
-continues with matching tepiton conventions; the candidate list needs triage.
+Ported explicit placement from blueberryhill.fyi: front matter and the TOC
+appear only where `{{key}}` / `{{toc}}` put them, and `date: auto` reads
+commit dates from git (DEC-009, DEC-010). Phase 1 hygiene candidates still
+need triage.
 
 ## Active Tasks
 
 - [ ] Triage candidate tasks in IMPLEMENTATION.md (Phase 1)
+- [ ] Remove unused `header .subtitle/.author/.date` CSS (here and in blueberryhill.fyi)
 - [ ] `package.json` name `markdown-pages-site` vs repo `markdown-it-simple`
-- [ ] Repo description vs org README one-liner
 - [ ] npm hygiene (`.npmrc`, `engines.node`, `.nvmrc`) like the eleventy templates
 
 ## Blockers
@@ -24,15 +26,14 @@ None.
 
 ## Context
 
-- Whole build is `scripts/build.mjs`; config is env vars only (DEC-001)
-- `public/` is the site root (DEC-002); stylesheet at `public/assets/style.css` (DEC-005)
+- Whole build is `scripts/build.mjs`; config is env vars only (DEC-001); `public/` is the site root (DEC-002)
+- Header is title only; everything else needs `{{key}}`; TOC needs `{{toc}}` on its own line (DEC-009)
+- `date: auto` = file's last commit; root index = newest under `public/`; needs `fetch-depth: 0` (DEC-010)
 - `{{key}}` substitution runs before rendering, also inside code (DEC-003)
-- Definition lists via markdown-it-deflist (DEC-008), ported from blueberryhill.fyi,
-  the first site built from this template
+- blueberryhill.fyi is the first site from this template and the source of ported features
 - No tests: `npm run build` on the sample content is the check
-- Org-level conventions live in `~/projects/tepiton/CLAUDE.md`
 
 ## Next Session
 
-Read this file, then decide which Phase 1 candidates to do. Changes made in
-blueberryhill.fyi are a source of features to port upstream.
+Read this file, then decide which Phase 1 candidates to do. Check
+blueberryhill.fyi for further build or style changes to port upstream.

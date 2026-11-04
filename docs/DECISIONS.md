@@ -132,6 +132,9 @@ the title block and TOC.
 **Consequences**: Stylesheets can move between this template and the pandoc
 ones with little change.
 
+**Amended 2026-11-03** (DEC-009): the header now emits only `h1.title`;
+`nav#TOC` appears where `{{toc}}` is placed.
+
 ---
 
 ### DEC-008: Definition lists via markdown-it-deflist (2026-10-29)
@@ -151,6 +154,56 @@ is awkward to write).
 **Consequences**: Sites made from the template get definition lists without
 editing the build. A line starting with `: ` after a paragraph now becomes a
 definition.
+
+---
+
+### DEC-009: Front matter appears only where `{{key}}` places it (2026-11-03)
+
+**Status**: Active
+
+**Context**: blueberryhill.fyi showed an author and date under the home
+page title only because that page's front matter set them, and every page
+with two or more headings got a TOC at the top whether it wanted one or
+not.
+
+**Decision**: The page header renders only the title. `subtitle`,
+`author`, `date`, and every other key appear only where the body uses
+`{{key}}`. The TOC is no longer automatic: `{{toc}}` marks where it goes
+(an HTML comment marker, swapped for the TOC after rendering, once the
+headings are known). A `toc` front-matter key overrides it. The
+two-heading minimum is dropped; an explicit `{{toc}}` renders whenever
+the page has any `##`/`###` heading.
+
+**Alternatives considered**: Keep the automatic header lines and TOC with
+opt-out keys (`toc: false`).
+
+**Consequences**: Layout is visible in the Markdown. Sites upgrading from
+the old build lose their header lines and TOC until they add the
+placeholders; the samples show the pattern
+(`*{{subtitle}}* · {{author}} · {{date}}`, then `**On this page**` and
+`{{toc}}`). Amends DEC-007: `p.subtitle`/`.author`/`.date` are no longer
+emitted.
+
+---
+
+### DEC-010: `date: auto` takes the date from git (2026-11-03)
+
+**Status**: Active
+
+**Context**: A hand-typed "updated" date goes stale.
+
+**Decision**: `date: auto` is replaced with the page file's last commit
+date (`git log --relative --name-only --format=%cs`, one call per build).
+The root `index.md` gets the newest commit date under `SRC_DIR`. Without
+git history the build uses today's date and warns. The Pages workflow
+checks out with `fetch-depth: 0`.
+
+**Alternatives considered**: Build date (changes every page on every
+deploy); file mtime (meaningless after a fresh checkout).
+
+**Consequences**: Uncommitted edits don't move the date. Commits outside
+`SRC_DIR` don't count. A shallow clone would give every page the same date,
+hence the workflow change.
 
 ---
 
