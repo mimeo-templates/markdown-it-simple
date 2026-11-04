@@ -62,3 +62,23 @@ hand-typed date that went stale; the automatic TOC couldn't be positioned.
 - DEC-010: `date: auto` from git
 
 **Files**: `scripts/build.mjs`, `public/assets/style.css`, `.github/workflows/pages.yml`, `public/**/index.md`, `README.md`
+
+## Entry 6: Phase 1 hygiene and the move to mimeo-templates (2026-11-04)
+
+**What**: Renamed the package, added npm/Node setup, removed the unused
+header CSS, synced the repo description, and repointed the remote to the
+`mimeo-templates` org.
+
+**Why**: Bring the template in line with the eleventy fleet; the header
+rules had matched nothing since DEC-009.
+
+**How**:
+
+- `package.json` name `markdown-it-simple`, `engines.node >=22`; `.npmrc` `fund=false`; `.nvmrc` 24
+- `pages.yml`: `node-version-file: .nvmrc`, `.nvmrc` in `paths`
+- `style.css`: header `.subtitle/.author/.date` dropped; `_site/` diff showed only that change
+- `gh repo edit` description = org README one-liner; content-fixture matrix: no
+
+**Decisions**: DEC-011 (npm/Node setup, no `audit=false`).
+
+**Files**: 15b2ae1, 3cf7110

@@ -1,23 +1,21 @@
 ---
 phase: 1
 phase_name: Template Hygiene
-updated: 2026-11-03
-last_commit: 3a5a61e
-last_entry: 5
+updated: 2026-11-04
+last_commit: 3cf7110
+last_entry: 6
 ---
 
 ## Current Focus
 
-Ported explicit placement from blueberryhill.fyi: front matter and the TOC
-appear only where `{{key}}` / `{{toc}}` put them, and `date: auto` reads
-commit dates from git (DEC-009, DEC-010). Phase 1 hygiene candidates still
-need triage.
+Phase 1 hygiene is done: package rename, npm/Node setup (DEC-011), unused
+header CSS removed, repo description synced with the org README. The
+repo now lives in the `mimeo-templates` org.
 
 ## Active Tasks
 
-- [x] Package rename, npm/Node setup (DEC-011), unused header CSS removed
-- [x] GitHub repo description set to the org README one-liner
-- [ ] Remove the same unused header CSS in blueberryhill.fyi
+- [ ] Remove the same unused header CSS in blueberryhill.fyi (deferred;
+      leave blueberryhill.fyi alone until asked)
 
 ## Blockers
 
@@ -35,5 +33,5 @@ None.
 
 ## Next Session
 
-Read this file, then decide which Phase 1 candidates to do. Check
-blueberryhill.fyi for further build or style changes to port upstream.
+Phase 1 has no open candidates. Check blueberryhill.fyi for build or
+style changes to port upstream, or close Phase 1.
