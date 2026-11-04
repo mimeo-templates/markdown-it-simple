@@ -26,6 +26,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # full history so 'date: auto' can read commit dates
 
       - name: Set up Node
         uses: actions/setup-node@v7

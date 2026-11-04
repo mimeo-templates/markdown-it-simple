@@ -64,8 +64,9 @@ doesn't need it, but it stops GitHub Pages from running Jekyll if
   `[Dewey](../dewey/index.md)` links to `../dewey/index.html`.
 - Headings get GitHub-style `id` slugs, so `## First Section` can be
   linked as `#first-section`.
-- A page with two or more `##` or `###` headings gets a table of contents
-  at the top.
+- `{{toc}}` inserts a table of contents of the page's `##` and `###`
+  headings. Pages get no table of contents unless they ask for one. Put
+  `{{toc}}` on its own line.
 - Raw HTML in Markdown is passed through, and bare URLs are turned into links.
 - Definition lists (`<dl>`) use the Pandoc/PHP Markdown Extra syntax: a
   term on its own line, then one or more lines starting with `: `.
@@ -103,23 +104,40 @@ Front matter is optional YAML at the top of a page:
 title: "The Duckburg Gazette"
 subtitle: "a mimeo template"
 author: "the Junior Woodchucks"
-date: 2026-10-18
+date: auto
 description: "Shown in search results and link previews"
 lang: en
 ---
 ```
 
+The build uses only a few keys directly:
+
 | Key | Used for |
 |-----|----------|
 | `title` | Page header and `<title>`. Without it, the first `#` heading is used, then the file name. The header block is only shown when `title` is set. |
-| `subtitle` | Line under the title in the header |
-| `author` | Line in the header |
-| `date` | Line in the header, shown as `YYYY-MM-DD` |
 | `description` | `<meta name="description">` |
 | `lang` | `<html lang>`; defaults to `en` |
+| `date` | `auto` is replaced with a date from git (see below) |
 
-You can add any other keys. The page header ignores them, but they are
-available for substitution.
+Nothing else appears on the page just because it is in the front matter.
+`subtitle`, `author`, `date`, and any other key show up only where the
+body uses `{{key}}` (see [Substitution](#substitution)).
+
+### `date: auto`
+
+`date: auto` sets `date` to the last commit date of the page's file, as
+`YYYY-MM-DD`. The root `index.md` gets the newest commit date anywhere
+under `public/`, since it usually stands for the whole site. Show it with
+`{{date}}`:
+
+```markdown
+Updated {{date}}.
+```
+
+The date comes from commits, so uncommitted edits don't change it. The
+Pages workflow checks out the full history (`fetch-depth: 0`) for this.
+If git history isn't available, the build uses today's date and prints
+a warning.
 
 ## Substitution
 
@@ -151,6 +169,7 @@ renders as:
 | `{{ author }}` | The same; spaces inside the braces are allowed |
 | `{{troop.number}}` | A nested value, looked up with dots |
 | `{{date}}` | YAML dates are printed as `YYYY-MM-DD` |
+| `{{toc}}` | The page's table of contents, unless the front matter sets `toc` |
 | `{{missing}}` | Left as is, and the build prints a warning naming the file |
 | `\{{author}}` | The literal text `{{author}}` |
 

@@ -8,6 +8,12 @@ description: "Notes on Dewey Duck, the middle nephew"
 
 [back to the index](../)
 
+*{{subtitle}}* · {{author}} · {{date}}
+
+**On this page**
+
+{{toc}}
+
 Dewey is the middle name in "Huey, Dewey, and Louie", and that is about the
 only thing that sets him apart in older stories. Later versions gave him
 more to work with.

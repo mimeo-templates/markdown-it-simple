@@ -8,6 +8,12 @@ description: "Notes on the eldest-by-convention of Donald Duck's three nephews"
 
 [back to the index](../)
 
+*{{subtitle}}* · {{author}} · {{date}}
+
+**On this page**
+
+{{toc}}
+
 > Three ducks, one sentence, split three ways.
 
 Hughie (more often spelled *Huey*) is one of Donald Duck's three nephews,

@@ -2,9 +2,11 @@
 title: "The Duckburg Gazette"
 subtitle: "a mimeo template, printed on McDuck Industries letterhead"
 author: "the Junior Woodchucks, Troop 1, Duckburg chapter"
-date: 2026-10-18
+date: auto
 description: "A simple mimeo template, dressed up as a newsletter for Donald Duck's three nephews"
 ---
+
+*{{subtitle}}*
 
 Dedicated to Uncle Donald, who has survived three nephews, one rich uncle,
 and an uncountable number of exploding hammocks. Replace this with your own
@@ -13,6 +15,10 @@ dedication, or keep it. He has earned it.
 *Compiled on {{date}} by {{author}}.*
 
 [Hughie](./hughie/) · [Dewey](./dewey/) · [Louie](./louie/)
+
+**On this page**
+
+{{toc}}
 
 > "Work smarter, not harder. And if that fails, check the Guidebook."
 >

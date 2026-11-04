@@ -7,6 +7,7 @@ import MarkdownIt from "markdown-it";
 import anchor from "markdown-it-anchor";
 import deflist from "markdown-it-deflist";
 import matter from "gray-matter";
+import { execFileSync } from "node:child_process";
 
 const SRC_DIR = path.resolve(process.env.SRC_DIR ?? "public");
 const OUT_DIR = path.resolve(process.env.OUT_DIR ?? "_site");
@@ -28,11 +29,38 @@ const slugify = (s) =>
 // YAML dates come back from gray-matter as Date objects; print them as YYYY-MM-DD.
 const fmtDate = (v) => (v instanceof Date ? v.toISOString().slice(0, 10) : v);
 
+// Last-commit dates (YYYY-MM-DD) from git, keyed by path relative to dir,
+// plus the newest date overall. Empty if git or history is unavailable
+// (CI needs a full clone: actions/checkout with fetch-depth: 0).
+function gitDates(dir) {
+  const files = new Map();
+  let latest = null;
+  try {
+    const out = execFileSync(
+      "git", ["log", "--relative", "--name-only", "--format=%x00%cs", "--", "."],
+      { cwd: dir, encoding: "utf8", maxBuffer: 64 * 1024 * 1024, stdio: ["ignore", "pipe", "ignore"] });
+    for (const chunk of out.split("\0").slice(1)) {
+      const [date, ...names] = chunk.trim().split("\n");
+      latest ??= date;
+      for (const n of names) if (n && !files.has(n)) files.set(n, date);
+    }
+  } catch {
+    console.warn("  warning: git history unavailable; 'date: auto' falls back to today");
+  }
+  return { files, latest };
+}
+
+// An HTML comment passes through markdown-it untouched (html: true).
+const TOC_MARK = "<!--toc-->";
+
 // Poor man's mustache: replace {{key}} (or {{a.b}}) with the front-matter
 // value. \{{key}} yields a literal {{key}}; unknown keys are left in place.
 const fill = (content, fm, rel) =>
   content.replace(/(\\?)\{\{\s*([\w.]+)\s*\}\}/g, (match, esc, key) => {
     if (esc) return match.slice(1);
+    // {{toc}} becomes a marker swapped for the table of contents after
+    // rendering, once the headings are known.
+    if (key === "toc" && fm.toc == null) return TOC_MARK;
     const value = key.split(".").reduce((o, k) => o?.[k], fm);
     if (value == null) {
       console.warn(`  warning: ${rel}: no front-matter value for {{${key}}}`);
@@ -71,18 +99,20 @@ md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
 
 function renderToc(headings) {
   const items = headings.filter((h) => h.level >= 2 && h.level <= 3);
-  if (items.length < 2) return "";
+  if (items.length === 0) return "";
   const lis = items
     .map((h) => `<li class="toc-h${h.level}"><a href="#${h.slug}">${escapeHtml(h.title)}</a></li>`)
     .join("\n");
   return `<nav id="TOC" role="doc-toc">\n<ul>\n${lis}\n</ul>\n</nav>\n`;
 }
 
-function page({ title, fm, body, toc, root }) {
+// Only the title is rendered automatically. Other front-matter values
+// (date, author, ...) appear only where the page body uses {{key}}.
+function page({ title, fm, body, root }) {
   const header = fm.title
     ? `<header id="title-block-header">
 <h1 class="title">${escapeHtml(fm.title)}</h1>
-${fm.subtitle ? `<p class="subtitle">${escapeHtml(fm.subtitle)}</p>\n` : ""}${fm.author ? `<p class="author">${escapeHtml(fm.author)}</p>\n` : ""}${fm.date ? `<p class="date">${escapeHtml(fmtDate(fm.date))}</p>\n` : ""}</header>\n`
+</header>\n`
     : "";
   return `<!DOCTYPE html>
 <html lang="${escapeHtml(fm.lang ?? "en")}">
@@ -93,7 +123,7 @@ ${fm.subtitle ? `<p class="subtitle">${escapeHtml(fm.subtitle)}</p>\n` : ""}${fm
 ${fm.description ? `<meta name="description" content="${escapeHtml(fm.description)}">\n` : ""}<link rel="stylesheet" href="${root}/assets/style.css">
 </head>
 <body>
-${header}${toc}${body}</body>
+${header}${body}</body>
 </html>
 `;
 }
@@ -119,6 +149,9 @@ async function main() {
   for await (const f of walk(SRC_DIR)) files.push(f);
   files.sort();
 
+  const dates = gitDates(SRC_DIR);
+  const today = new Date().toISOString().slice(0, 10);
+
   let count = 0;
   for (const src of files) {
     const rel = path.relative(SRC_DIR, src);
@@ -132,9 +165,15 @@ async function main() {
     }
 
     const { data: fm, content } = matter(await fs.readFile(src, "utf8"));
+    // date: auto -> last commit date. The root index summarizes the whole
+    // site, so it takes the newest commit anywhere under SRC_DIR.
+    if (fm.date === "auto") {
+      const key = rel.split(path.sep).join("/");
+      fm.date = (/^index\.(md|markdown)$/i.test(key) ? dates.latest : dates.files.get(key)) ?? today;
+    }
     md._headings = [];
-    const body = md.render(fill(content, fm, rel));
     const headings = md._headings;
+    const body = md.render(fill(content, fm, rel)).replaceAll(TOC_MARK, () => renderToc(headings));
     const h1 = headings.find((h) => h.level === 1);
     const title = fm.title ?? h1?.title ?? path.basename(rel).replace(MD_EXT, "");
     const root = relDir === "." ? "." : relDir.split(path.sep).map(() => "..").join("/");
@@ -142,7 +181,7 @@ async function main() {
     const outRel = path.join(relDir, htmlName(path.basename(rel)));
     const dest = path.join(OUT_DIR, outRel);
     await fs.mkdir(path.dirname(dest), { recursive: true });
-    await fs.writeFile(dest, page({ title, fm, body, toc: renderToc(headings), root }));
+    await fs.writeFile(dest, page({ title, fm, body, root }));
     console.log(`  ${rel} -> ${outRel}`);
     count++;
   }
@@ -164,7 +203,7 @@ async function main() {
     const pages = [];
     for await (const f of walk(OUT_DIR)) if (f.endsWith(".html")) pages.push(path.relative(OUT_DIR, f).split(path.sep).join("/"));
     const list = pages.sort().map((p) => `<li><a href="${p}">${escapeHtml(p)}</a></li>`).join("\n");
-    await fs.writeFile(indexPath, page({ title: SITE_TITLE, fm: {}, body: `<h1>${escapeHtml(SITE_TITLE)}</h1>\n<ul>\n${list}\n</ul>\n`, toc: "", root: "." }));
+    await fs.writeFile(indexPath, page({ title: SITE_TITLE, fm: {}, body: `<h1>${escapeHtml(SITE_TITLE)}</h1>\n<ul>\n${list}\n</ul>\n`, root: "." }));
   }
 
   console.log(`Built ${count} page(s) into ${path.relative(process.cwd(), OUT_DIR) || OUT_DIR}/`);

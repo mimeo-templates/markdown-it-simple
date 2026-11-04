@@ -8,6 +8,12 @@ description: "Notes on Louie Duck, the youngest nephew by convention"
 
 [back to the index](../)
 
+*{{subtitle}}* · {{author}} · {{date}}
+
+**On this page**
+
+{{toc}}
+
 > "Why work hard when you can work smart?"
 >
 > — the general Louie philosophy
